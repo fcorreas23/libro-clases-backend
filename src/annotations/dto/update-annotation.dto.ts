@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
-import { AnnotationType } from '../../../generated/prisma/enums.js';
+import { AnnotationType } from '@prisma/client';
 
 export class UpdateAnnotationDto {
   @IsOptional()

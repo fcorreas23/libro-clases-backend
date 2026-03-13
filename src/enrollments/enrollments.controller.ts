@@ -13,7 +13,9 @@ import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { EnrollmentsQueryDto } from './dto/enrollments-query.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
 import { EnrollmentsService } from './enrollments.service';
+import { Roles } from '../auth/roles.decorator';
 
+@Roles('admin')
 @Controller('enrollments')
 export class EnrollmentsController {
   constructor(private readonly enrollmentsService: EnrollmentsService) {}

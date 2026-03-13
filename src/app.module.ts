@@ -1,6 +1,12 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { RolesGuard } from './auth/roles.guard';
 import { AnnotationsController } from './annotations/annotations.controller';
 import { AnnotationsService } from './annotations/annotations.service';
 import { AttendancesController } from './attendances/attendances.controller';
@@ -28,9 +34,16 @@ import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [
+    PrismaModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET ?? 'libro-clases-dev-secret',
+      signOptions: { expiresIn: '8h' },
+    }),
+  ],
   controllers: [
     AppController,
+    AuthController,
     UsersController,
     SchoolYearsController,
     CoursesController,
@@ -46,6 +59,7 @@ import { UsersService } from './users/users.service';
   ],
   providers: [
     AppService,
+    AuthService,
     UsersService,
     SchoolYearsService,
     CoursesService,
@@ -58,6 +72,14 @@ import { UsersService } from './users/users.service';
     GradesService,
     AnnotationsService,
     AttendancesService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule {}

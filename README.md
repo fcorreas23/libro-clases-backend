@@ -25,6 +25,14 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Frontend integration
+
+- Set backend port in `.env`: `PORT=3001`
+- Set allowed frontend origin in `.env`: `FRONTEND_URL=http://localhost:3000`
+- Set JWT secret in `.env`: `JWT_SECRET=tu-secreto-seguro`
+- Auth endpoint available: `POST /auth/login`
+- Seed credentials: `admin@colegio.cl / Admin123456`
+
 ## Project setup
 
 ```bash

@@ -1,9 +1,11 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
+import { Prisma } from '@prisma/client';
+import { AuthenticatedUser } from '../auth/auth.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { GradesQueryDto } from './dto/grades-query.dto';
@@ -12,6 +14,14 @@ import { UpdateGradeDto } from './dto/update-grade.dto';
 @Injectable()
 export class GradesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private ensureTeacherContext(user: AuthenticatedUser) {
+    if (!user.teacherId) {
+      throw new ForbiddenException('Teacher profile is required');
+    }
+
+    return user.teacherId;
+  }
 
   private async ensureStudentEnrollment(
     studentId: number,
@@ -60,9 +70,16 @@ export class GradesService {
     }
   }
 
-  async create(data: CreateGradeDto) {
+  async create(data: CreateGradeDto, user: AuthenticatedUser) {
     if (data.value < 1 || data.value > 7) {
       throw new BadRequestException('Grade value must be between 1.0 and 7.0');
+    }
+
+    if (user.roles.includes('teacher')) {
+      const teacherId = this.ensureTeacherContext(user);
+      if (data.teacherId !== teacherId) {
+        throw new ForbiddenException('Teachers can only create grades using their own teacherId');
+      }
     }
 
     await this.ensureStudentEnrollment(data.studentId, data.courseId, data.schoolYearId);
@@ -82,7 +99,11 @@ export class GradesService {
     });
   }
 
-  findAll(query: GradesQueryDto) {
+  findAll(query: GradesQueryDto, user: AuthenticatedUser) {
+    const teacherId = user.roles.includes('teacher')
+      ? this.ensureTeacherContext(user)
+      : query.teacherId;
+
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const skip = (page - 1) * limit;
@@ -91,7 +112,7 @@ export class GradesService {
       courseId: query.courseId,
       schoolYearId: query.schoolYearId,
       subjectId: query.subjectId,
-      teacherId: query.teacherId,
+      teacherId,
       value:
         query.minValue !== undefined || query.maxValue !== undefined
           ? {
@@ -126,7 +147,7 @@ export class GradesService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, user: AuthenticatedUser) {
     const grade = await this.prisma.grade.findUnique({
       where: { id },
       include: {
@@ -146,11 +167,18 @@ export class GradesService {
       throw new NotFoundException(`Grade ${id} not found`);
     }
 
+    if (user.roles.includes('teacher')) {
+      const teacherId = this.ensureTeacherContext(user);
+      if (grade.teacherId !== teacherId) {
+        throw new ForbiddenException('Teachers can only access their own grades');
+      }
+    }
+
     return grade;
   }
 
-  async update(id: number, data: UpdateGradeDto) {
-    await this.findOne(id);
+  async update(id: number, data: UpdateGradeDto, user: AuthenticatedUser) {
+    await this.findOne(id, user);
 
     if (data.value !== undefined && (data.value < 1 || data.value > 7)) {
       throw new BadRequestException('Grade value must be between 1.0 and 7.0');
@@ -167,8 +195,8 @@ export class GradesService {
     });
   }
 
-  async remove(id: number) {
-    await this.findOne(id);
+  async remove(id: number, user: AuthenticatedUser) {
+    await this.findOne(id, user);
     return this.prisma.grade.delete({
       where: { id },
     });

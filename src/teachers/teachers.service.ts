@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateTeacherAccountDto } from './dto/create-teacher-account.dto';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { TeachersQueryDto } from './dto/teachers-query.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
@@ -10,6 +12,48 @@ export class TeachersService {
 
   create(data: CreateTeacherDto) {
     return this.prisma.teacher.create({ data });
+  }
+
+  async createAccount(data: CreateTeacherAccountDto) {
+    const teacherRole = await this.prisma.role.findUnique({
+      where: { name: 'teacher' },
+    });
+
+    if (!teacherRole) {
+      throw new NotFoundException('Teacher role not found');
+    }
+
+    const passwordHash = await bcrypt.hash(data.password, 10);
+
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          email: data.email.toLowerCase(),
+          passwordHash,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          isActive: true,
+        },
+      });
+
+      await tx.userRole.create({
+        data: {
+          userId: user.id,
+          roleId: teacherRole.id,
+        },
+      });
+
+      return tx.teacher.create({
+        data: {
+          userId: user.id,
+          employeeCode: data.employeeCode,
+          phone: data.phone,
+        },
+        include: {
+          user: true,
+        },
+      });
+    });
   }
 
   findAll(query: TeachersQueryDto) {
@@ -54,6 +98,22 @@ export class TeachersService {
 
     if (!teacher) {
       throw new NotFoundException(`Teacher ${id} not found`);
+    }
+
+    return teacher;
+  }
+
+  async findByUserId(userId: number) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: { userId },
+      include: {
+        user: true,
+        homeroomOf: true,
+      },
+    });
+
+    if (!teacher) {
+      throw new NotFoundException(`Teacher for user ${userId} not found`);
     }
 
     return teacher;

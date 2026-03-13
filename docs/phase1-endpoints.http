@@ -1,8 +1,17 @@
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @contentType = application/json
 
 ### Health
 GET {{baseUrl}}/
+
+### Auth - login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@colegio.cl",
+  "password": "Admin123456"
+}
 
 ### Subjects - list
 GET {{baseUrl}}/subjects?page=1&limit=20

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSchoolYearDto } from './dto/create-school-year.dto';
 import { SchoolYearsQueryDto } from './dto/school-years-query.dto';

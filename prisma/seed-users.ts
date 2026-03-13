@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import type { Role } from '../generated/prisma/client.js';
+import type { Role } from '@prisma/client';
 import { defaultPassword, prisma } from './seed-client.js';
 import { type SeededUser, usersToSeed } from './seed-data.js';
 

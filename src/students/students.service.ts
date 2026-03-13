@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { AuthenticatedUser } from '../auth/auth.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentsQueryDto } from './dto/students-query.dto';
@@ -8,6 +9,39 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 @Injectable()
 export class StudentsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private ensureTeacherContext(user: AuthenticatedUser) {
+    if (!user.teacherId) {
+      throw new ForbiddenException('Teacher profile is required');
+    }
+
+    return user.teacherId;
+  }
+
+  private async ensureTeacherCourseAccess(teacherId: number, courseId?: number) {
+    if (!courseId) {
+      throw new ForbiddenException('Teachers must filter students by courseId');
+    }
+
+    const [assignment, homeroom] = await Promise.all([
+      this.prisma.courseSubject.findFirst({
+        where: {
+          courseId,
+          teacherId,
+        },
+      }),
+      this.prisma.course.findFirst({
+        where: {
+          id: courseId,
+          homeroomTeacherId: teacherId,
+        },
+      }),
+    ]);
+
+    if (!assignment && !homeroom) {
+      throw new ForbiddenException('Teacher is not assigned to this course');
+    }
+  }
 
   create(data: CreateStudentDto) {
     return this.prisma.student.create({
@@ -25,7 +59,11 @@ export class StudentsService {
     });
   }
 
-  findAll(query: StudentsQueryDto) {
+  async findAll(query: StudentsQueryDto, user: AuthenticatedUser) {
+    if (user.roles.includes('teacher')) {
+      await this.ensureTeacherCourseAccess(this.ensureTeacherContext(user), query.courseId);
+    }
+
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const skip = (page - 1) * limit;
@@ -68,7 +106,7 @@ export class StudentsService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, user?: AuthenticatedUser) {
     const student = await this.prisma.student.findUnique({
       where: { id },
       include: {
@@ -83,6 +121,27 @@ export class StudentsService {
 
     if (!student) {
       throw new NotFoundException(`Student ${id} not found`);
+    }
+
+    if (user?.roles.includes('teacher')) {
+      const teacherId = this.ensureTeacherContext(user);
+      const allowedByHomeroom = student.enrollments.some(
+        (enrollment) => enrollment.course.homeroomTeacherId === teacherId,
+      );
+
+      if (!allowedByHomeroom) {
+        const courseIds = student.enrollments.map((enrollment) => enrollment.course.id);
+        const assignment = await this.prisma.courseSubject.findFirst({
+          where: {
+            teacherId,
+            courseId: { in: courseIds },
+          },
+        });
+
+        if (!assignment) {
+          throw new ForbiddenException('Teacher cannot access this student');
+        }
+      }
     }
 
     return student;

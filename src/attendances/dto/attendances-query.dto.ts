@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsDateString, IsEnum, IsInt, IsOptional, Min } from 'class-validator';
-import { AttendanceStatus } from '../../../generated/prisma/enums.js';
+import { AttendanceStatus } from '@prisma/client';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 export class AttendancesQueryDto extends PaginationQueryDto {

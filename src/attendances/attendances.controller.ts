@@ -9,6 +9,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CurrentUser } from '../auth/current-user.decorator';
+import { Roles } from '../auth/roles.decorator';
+import type { AuthenticatedUser } from '../auth/auth.types';
 import { AttendancesService } from './attendances.service';
 import { AttendanceDailySummaryQueryDto } from './dto/attendance-daily-summary-query.dto';
 import { AttendanceRangeSummaryQueryDto } from './dto/attendance-range-summary-query.dto';
@@ -21,43 +24,61 @@ import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 export class AttendancesController {
   constructor(private readonly attendancesService: AttendancesService) {}
 
+  @Roles('admin', 'teacher')
   @Post()
-  create(@Body() data: CreateAttendanceDto) {
-    return this.attendancesService.create(data);
+  create(@Body() data: CreateAttendanceDto, @CurrentUser() user: AuthenticatedUser) {
+    return this.attendancesService.create(data, user);
   }
 
+  @Roles('admin', 'teacher')
   @Post('bulk')
-  bulkUpsert(@Body() data: BulkUpsertAttendanceDto) {
-    return this.attendancesService.bulkUpsert(data);
+  bulkUpsert(@Body() data: BulkUpsertAttendanceDto, @CurrentUser() user: AuthenticatedUser) {
+    return this.attendancesService.bulkUpsert(data, user);
   }
 
+  @Roles('admin', 'teacher')
   @Get()
-  findAll(@Query() query: AttendancesQueryDto) {
-    return this.attendancesService.findAll(query);
+  findAll(@Query() query: AttendancesQueryDto, @CurrentUser() user: AuthenticatedUser) {
+    return this.attendancesService.findAll(query, user);
   }
 
+  @Roles('admin', 'teacher')
   @Get('daily-summary')
-  dailySummary(@Query() query: AttendanceDailySummaryQueryDto) {
-    return this.attendancesService.getDailySummary(query);
+  dailySummary(
+    @Query() query: AttendanceDailySummaryQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.attendancesService.getDailySummary(query, user);
   }
 
+  @Roles('admin', 'teacher')
   @Get('daily-summary/range')
-  dailySummaryRange(@Query() query: AttendanceRangeSummaryQueryDto) {
-    return this.attendancesService.getDailySummaryRange(query);
+  dailySummaryRange(
+    @Query() query: AttendanceRangeSummaryQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.attendancesService.getDailySummaryRange(query, user);
   }
 
+  @Roles('admin', 'teacher')
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.attendancesService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+    return this.attendancesService.findOne(id, user);
   }
 
+  @Roles('admin', 'teacher')
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateAttendanceDto) {
-    return this.attendancesService.update(id, data);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdateAttendanceDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.attendancesService.update(id, data, user);
   }
 
+  @Roles('admin', 'teacher')
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.attendancesService.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+    return this.attendancesService.remove(id, user);
   }
 }

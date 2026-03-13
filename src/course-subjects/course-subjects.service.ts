@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../../generated/prisma/client.js';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { AuthenticatedUser } from '../auth/auth.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { CourseSubjectsQueryDto } from './dto/course-subjects-query.dto';
 import { CreateCourseSubjectDto } from './dto/create-course-subject.dto';
@@ -9,20 +10,32 @@ import { UpdateCourseSubjectDto } from './dto/update-course-subject.dto';
 export class CourseSubjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private ensureTeacherContext(user: AuthenticatedUser) {
+    if (!user.teacherId) {
+      throw new ForbiddenException('Teacher profile is required');
+    }
+
+    return user.teacherId;
+  }
+
   create(data: CreateCourseSubjectDto) {
     return this.prisma.courseSubject.create({
       data,
     });
   }
 
-  findAll(query: CourseSubjectsQueryDto) {
+  findAll(query: CourseSubjectsQueryDto, user: AuthenticatedUser) {
+    const teacherId = user.roles.includes('teacher')
+      ? this.ensureTeacherContext(user)
+      : query.teacherId;
+
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const skip = (page - 1) * limit;
     const where: Prisma.CourseSubjectWhereInput = {
       courseId: query.courseId,
       subjectId: query.subjectId,
-      teacherId: query.teacherId,
+      teacherId,
     };
 
     return this.prisma.courseSubject.findMany({
@@ -42,7 +55,7 @@ export class CourseSubjectsService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, user?: AuthenticatedUser) {
     const courseSubject = await this.prisma.courseSubject.findUnique({
       where: { id },
       include: {
@@ -58,6 +71,13 @@ export class CourseSubjectsService {
 
     if (!courseSubject) {
       throw new NotFoundException(`CourseSubject ${id} not found`);
+    }
+
+    if (user?.roles.includes('teacher')) {
+      const teacherId = this.ensureTeacherContext(user);
+      if (courseSubject.teacherId !== teacherId) {
+        throw new ForbiddenException('Teachers can only access their own course subjects');
+      }
     }
 
     return courseSubject;

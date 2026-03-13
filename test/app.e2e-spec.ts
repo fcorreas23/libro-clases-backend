@@ -10,7 +10,7 @@ jest.mock('../generated/prisma/enums.js', () => ({
   },
 }));
 
-jest.mock('../generated/prisma/client.js', () => ({
+jest.mock('../@prisma/client', () => ({
   AnnotationType: {
     positive: 'positive',
     negative: 'negative',

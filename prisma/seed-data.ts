@@ -1,4 +1,4 @@
-import { AnnotationType } from '../generated/prisma/enums.js';
+import { AnnotationType } from '@prisma/client';
 
 export const usersToSeed = [
   {

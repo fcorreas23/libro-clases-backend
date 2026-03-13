@@ -1,4 +1,4 @@
-import { AttendanceStatus } from '../generated/prisma/enums.js';
+import { AttendanceStatus } from '@prisma/client';
 import { prisma } from './seed-client.js';
 import { coursesToSeed, studentsToSeed, toCourseKey } from './seed-data.js';
 

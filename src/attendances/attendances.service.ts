@@ -1,5 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { AttendanceStatus, Prisma } from '../../generated/prisma/client.js';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { AttendanceStatus, Prisma } from '@prisma/client';
+import { AuthenticatedUser } from '../auth/auth.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { AttendanceDailySummaryQueryDto } from './dto/attendance-daily-summary-query.dto';
 import { AttendanceRangeSummaryQueryDto } from './dto/attendance-range-summary-query.dto';
@@ -11,6 +17,35 @@ import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 @Injectable()
 export class AttendancesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private ensureTeacherContext(user: AuthenticatedUser) {
+    if (!user.teacherId) {
+      throw new ForbiddenException('Teacher profile is required');
+    }
+
+    return user.teacherId;
+  }
+
+  private async ensureTeacherCourseAccess(teacherId: number, courseId: number) {
+    const [assignment, homeroom] = await Promise.all([
+      this.prisma.courseSubject.findFirst({
+        where: {
+          courseId,
+          teacherId,
+        },
+      }),
+      this.prisma.course.findFirst({
+        where: {
+          id: courseId,
+          homeroomTeacherId: teacherId,
+        },
+      }),
+    ]);
+
+    if (!assignment && !homeroom) {
+      throw new ForbiddenException('Teacher is not assigned to this course');
+    }
+  }
 
   private normalizeDate(dateInput: string) {
     const date = new Date(dateInput);
@@ -62,7 +97,15 @@ export class AttendancesService {
     }
   }
 
-  async create(data: CreateAttendanceDto) {
+  async create(data: CreateAttendanceDto, user: AuthenticatedUser) {
+    if (user.roles.includes('teacher')) {
+      const teacherId = this.ensureTeacherContext(user);
+      if (data.takenByTeacherId !== teacherId) {
+        throw new ForbiddenException('Teachers can only record attendance with their own teacherId');
+      }
+      await this.ensureTeacherCourseAccess(teacherId, data.courseId);
+    }
+
     await this.ensureStudentEnrollment(data.studentId, data.courseId, data.schoolYearId);
 
     return this.prisma.attendance.create({
@@ -78,7 +121,15 @@ export class AttendancesService {
     });
   }
 
-  async bulkUpsert(data: BulkUpsertAttendanceDto) {
+  async bulkUpsert(data: BulkUpsertAttendanceDto, user: AuthenticatedUser) {
+    if (user.roles.includes('teacher')) {
+      const teacherId = this.ensureTeacherContext(user);
+      if (data.takenByTeacherId !== teacherId) {
+        throw new ForbiddenException('Teachers can only record attendance with their own teacherId');
+      }
+      await this.ensureTeacherCourseAccess(teacherId, data.courseId);
+    }
+
     const seen = new Set<number>();
     for (const record of data.records) {
       if (seen.has(record.studentId)) {
@@ -119,7 +170,11 @@ export class AttendancesService {
     return this.prisma.$transaction(operations);
   }
 
-  findAll(query: AttendancesQueryDto) {
+  findAll(query: AttendancesQueryDto, user: AuthenticatedUser) {
+    const takenByTeacherId = user.roles.includes('teacher')
+      ? this.ensureTeacherContext(user)
+      : query.takenByTeacherId;
+
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const skip = (page - 1) * limit;
@@ -128,7 +183,7 @@ export class AttendancesService {
       studentId: query.studentId,
       courseId: query.courseId,
       schoolYearId: query.schoolYearId,
-      takenByTeacherId: query.takenByTeacherId,
+      takenByTeacherId,
       status: query.status,
       date:
         query.dateFrom || query.dateTo
@@ -157,7 +212,11 @@ export class AttendancesService {
     });
   }
 
-  async getDailySummary(query: AttendanceDailySummaryQueryDto) {
+  async getDailySummary(query: AttendanceDailySummaryQueryDto, user: AuthenticatedUser) {
+    if (user.roles.includes('teacher')) {
+      await this.ensureTeacherCourseAccess(this.ensureTeacherContext(user), query.courseId);
+    }
+
     const { start, end } = this.dayRange(query.date);
 
     const [statusCounts, enrolledCount] = await Promise.all([
@@ -212,7 +271,11 @@ export class AttendancesService {
     };
   }
 
-  async getDailySummaryRange(query: AttendanceRangeSummaryQueryDto) {
+  async getDailySummaryRange(query: AttendanceRangeSummaryQueryDto, user: AuthenticatedUser) {
+    if (user.roles.includes('teacher')) {
+      await this.ensureTeacherCourseAccess(this.ensureTeacherContext(user), query.courseId);
+    }
+
     const { start: rangeStart } = this.dayRange(query.dateFrom);
     const { end: rangeEnd } = this.dayRange(query.dateTo);
 
@@ -333,7 +396,7 @@ export class AttendancesService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, user: AuthenticatedUser) {
     const attendance = await this.prisma.attendance.findUnique({
       where: { id },
       include: {
@@ -352,11 +415,18 @@ export class AttendancesService {
       throw new NotFoundException(`Attendance ${id} not found`);
     }
 
+    if (user.roles.includes('teacher')) {
+      const teacherId = this.ensureTeacherContext(user);
+      if (attendance.takenByTeacherId !== teacherId) {
+        throw new ForbiddenException('Teachers can only access their own attendance records');
+      }
+    }
+
     return attendance;
   }
 
-  async update(id: number, data: UpdateAttendanceDto) {
-    await this.findOne(id);
+  async update(id: number, data: UpdateAttendanceDto, user: AuthenticatedUser) {
+    await this.findOne(id, user);
 
     return this.prisma.attendance.update({
       where: { id },
@@ -368,8 +438,8 @@ export class AttendancesService {
     });
   }
 
-  async remove(id: number) {
-    await this.findOne(id);
+  async remove(id: number, user: AuthenticatedUser) {
+    await this.findOne(id, user);
     return this.prisma.attendance.delete({
       where: { id },
     });
