@@ -2,6 +2,8 @@ import {
   IsBoolean,
   IsDateString,
   IsEmail,
+  IsInt,
+  Min,
   IsOptional,
   IsString,
   MinLength,
@@ -51,6 +53,11 @@ export class CreateStudentDto {
   @IsOptional()
   @IsEmail()
   contactEmail?: string | null;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  entrySchoolYearId?: number | null;
 
   @IsOptional()
   @IsBoolean()

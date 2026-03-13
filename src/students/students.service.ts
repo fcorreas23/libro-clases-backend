@@ -57,6 +57,7 @@ export class StudentsService {
         contactName: data.contactName ?? null,
         contactPhone: data.contactPhone ?? null,
         contactEmail: data.contactEmail ?? null,
+        entrySchoolYearId: data.entrySchoolYearId ?? null,
         isActive: data.isActive ?? true,
       },
     });
@@ -98,6 +99,7 @@ export class StudentsService {
     return this.prisma.student.findMany({
       where,
       include: {
+        entrySchoolYear: true,
         enrollments: {
           include: {
             course: true,
@@ -115,6 +117,7 @@ export class StudentsService {
     const student = await this.prisma.student.findUnique({
       where: { id },
       include: {
+        entrySchoolYear: true,
         enrollments: {
           include: {
             course: true,
@@ -173,6 +176,7 @@ export class StudentsService {
         contactName: data.contactName,
         contactPhone: data.contactPhone,
         contactEmail: data.contactEmail,
+        entrySchoolYearId: data.entrySchoolYearId,
         isActive: data.isActive,
       },
     });
