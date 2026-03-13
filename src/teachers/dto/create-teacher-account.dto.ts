@@ -16,9 +16,10 @@ export class CreateTeacherAccountDto {
   @MinLength(2)
   lastName!: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(3)
-  employeeCode!: string;
+  employeeCode?: string;
 
   @IsOptional()
   @IsString()

@@ -40,6 +40,12 @@ export class TeachersController {
     return this.teachersService.findAll(query);
   }
 
+  @Roles('admin')
+  @Get('next-code')
+  nextCode() {
+    return this.teachersService.generateCode();
+  }
+
   @Roles('admin', 'teacher')
   @Get('me')
   findMe(@CurrentUser() user: AuthenticatedUser) {

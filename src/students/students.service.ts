@@ -54,6 +54,9 @@ export class StudentsService {
         email: data.email ?? null,
         phone: data.phone ?? null,
         address: data.address ?? null,
+        contactName: data.contactName ?? null,
+        contactPhone: data.contactPhone ?? null,
+        contactEmail: data.contactEmail ?? null,
         isActive: data.isActive ?? true,
       },
     });
@@ -79,6 +82,8 @@ export class StudentsService {
             { lastName: { contains: query.q } },
             { rut: { contains: query.q } },
             { email: { contains: query.q } },
+            { contactName: { contains: query.q } },
+            { contactEmail: { contains: query.q } },
           ]
         : undefined,
       enrollments: query.courseId
@@ -165,6 +170,9 @@ export class StudentsService {
         email: data.email,
         phone: data.phone,
         address: data.address,
+        contactName: data.contactName,
+        contactPhone: data.contactPhone,
+        contactEmail: data.contactEmail,
         isActive: data.isActive,
       },
     });
@@ -175,5 +183,19 @@ export class StudentsService {
     return this.prisma.student.delete({
       where: { id },
     });
+  }
+
+  async generateCode(): Promise<{ code: string }> {
+    const year = new Date().getFullYear();
+    const prefix = `STU-${year}-`;
+    const last = await this.prisma.student.findFirst({
+      where: { studentCode: { startsWith: prefix } },
+      orderBy: { studentCode: 'desc' },
+    });
+    const nextNum = last
+      ? Number(last.studentCode.slice(prefix.length)) + 1
+      : 1;
+    const code = `${prefix}${String(nextNum).padStart(3, '0')}`;
+    return { code };
   }
 }

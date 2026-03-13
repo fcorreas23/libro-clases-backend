@@ -27,6 +27,12 @@ export class StudentsController {
     return this.studentsService.create(data);
   }
 
+  @Roles('admin')
+  @Get('next-code')
+  nextCode() {
+    return this.studentsService.generateCode();
+  }
+
   @Roles('admin', 'teacher')
   @Get()
   findAll(@Query() query: StudentsQueryDto, @CurrentUser() user: AuthenticatedUser) {

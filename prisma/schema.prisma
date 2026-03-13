@@ -8,6 +8,10 @@ generator client {
   output   = "../generated/prisma"
 }
 
+generator client_js {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mysql"
 }
@@ -127,6 +131,9 @@ model Student {
   email       String?   @unique
   phone       String?
   address     String?
+  contactName String?   @map("contact_name")
+  contactPhone String?  @map("contact_phone")
+  contactEmail String?  @map("contact_email")
   isActive    Boolean   @default(true) @map("is_active")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")

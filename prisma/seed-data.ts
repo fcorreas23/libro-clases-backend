@@ -48,17 +48,17 @@ export const usersToSeed = [
 export const teacherProfiles = [
   {
     email: 'profesor.jefe@colegio.cl',
-    employeeCode: 'DOC-001',
+    employeeCode: 'DOC-2026-001',
     phone: '+56944444444',
   },
   {
     email: 'profesor.lenguaje@colegio.cl',
-    employeeCode: 'DOC-002',
+    employeeCode: 'DOC-2026-002',
     phone: '+56955555555',
   },
   {
     email: 'profesor.matematica@colegio.cl',
-    employeeCode: 'DOC-003',
+    employeeCode: 'DOC-2026-003',
     phone: '+56966666666',
   },
 ] as const;

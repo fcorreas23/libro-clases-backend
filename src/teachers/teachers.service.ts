@@ -26,6 +26,17 @@ export class TeachersService {
     const passwordHash = await bcrypt.hash(data.password, 10);
 
     return this.prisma.$transaction(async (tx) => {
+      const year = new Date().getFullYear();
+      const prefix = `DOC-${year}-`;
+      const lastTeacher = await tx.teacher.findFirst({
+        where: { employeeCode: { startsWith: prefix } },
+        orderBy: { employeeCode: 'desc' },
+      });
+      const nextNum = lastTeacher
+        ? Number(lastTeacher.employeeCode.slice(prefix.length)) + 1
+        : 1;
+      const generatedCode = `${prefix}${String(nextNum).padStart(3, '0')}`;
+
       const user = await tx.user.create({
         data: {
           email: data.email.toLowerCase(),
@@ -46,7 +57,7 @@ export class TeachersService {
       return tx.teacher.create({
         data: {
           userId: user.id,
-          employeeCode: data.employeeCode,
+          employeeCode: data.employeeCode ?? generatedCode,
           phone: data.phone,
         },
         include: {
@@ -54,6 +65,20 @@ export class TeachersService {
         },
       });
     });
+  }
+
+  async generateCode(): Promise<{ code: string }> {
+    const year = new Date().getFullYear();
+    const prefix = `DOC-${year}-`;
+    const lastTeacher = await this.prisma.teacher.findFirst({
+      where: { employeeCode: { startsWith: prefix } },
+      orderBy: { employeeCode: 'desc' },
+    });
+    const nextNum = lastTeacher
+      ? Number(lastTeacher.employeeCode.slice(prefix.length)) + 1
+      : 1;
+    const code = `${prefix}${String(nextNum).padStart(3, '0')}`;
+    return { code };
   }
 
   findAll(query: TeachersQueryDto) {

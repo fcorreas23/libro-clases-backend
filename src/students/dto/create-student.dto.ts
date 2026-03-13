@@ -41,6 +41,18 @@ export class CreateStudentDto {
   address?: string | null;
 
   @IsOptional()
+  @IsString()
+  contactName?: string | null;
+
+  @IsOptional()
+  @IsString()
+  contactPhone?: string | null;
+
+  @IsOptional()
+  @IsEmail()
+  contactEmail?: string | null;
+
+  @IsOptional()
   @IsBoolean()
   isActive?: boolean;
 }
