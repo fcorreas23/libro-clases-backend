@@ -1,0 +1,154 @@
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### Health
+GET {{baseUrl}}/
+
+### Subjects - list
+GET {{baseUrl}}/subjects?page=1&limit=20
+
+### Subjects - create
+POST {{baseUrl}}/subjects
+Content-Type: {{contentType}}
+
+{
+  "name": "Historia",
+  "code": "HIS",
+  "description": "Historia y geografia"
+}
+
+### CourseSubjects - list
+GET {{baseUrl}}/course-subjects?page=1&limit=20
+
+### CourseSubjects - create
+# Requiere IDs existentes de curso/asignatura/docente.
+POST {{baseUrl}}/course-subjects
+Content-Type: {{contentType}}
+
+{
+  "courseId": 1,
+  "subjectId": 1,
+  "teacherId": 1
+}
+
+### Grades - list
+GET {{baseUrl}}/grades?page=1&limit=20
+
+### Grades - create valid
+# Requiere datos consistentes entre student/course/schoolYear/subject/courseSubject/teacher.
+POST {{baseUrl}}/grades
+Content-Type: {{contentType}}
+
+{
+  "studentId": 1,
+  "courseId": 1,
+  "schoolYearId": 1,
+  "subjectId": 1,
+  "courseSubjectId": 1,
+  "teacherId": 1,
+  "title": "Prueba Unidad 1",
+  "value": 6.1
+}
+
+### Grades - create invalid value (> 7) should return 400
+POST {{baseUrl}}/grades
+Content-Type: {{contentType}}
+
+{
+  "studentId": 1,
+  "courseId": 1,
+  "schoolYearId": 1,
+  "subjectId": 1,
+  "courseSubjectId": 1,
+  "teacherId": 1,
+  "title": "Nota fuera de rango",
+  "value": 7.5
+}
+
+### Annotations - list (without negative)
+GET {{baseUrl}}/annotations?page=1&limit=20
+
+### Annotations - list (negative requested as teacher)
+GET {{baseUrl}}/annotations?page=1&limit=20&includeNegative=true&viewerRole=teacher
+
+### Annotations - list (negative requested as inspector) should return 403
+GET {{baseUrl}}/annotations?page=1&limit=20&includeNegative=true&viewerRole=inspector
+
+### Annotations - create positive
+POST {{baseUrl}}/annotations
+Content-Type: {{contentType}}
+
+{
+  "studentId": 1,
+  "courseId": 1,
+  "schoolYearId": 1,
+  "teacherId": 1,
+  "type": "positive",
+  "content": "Buen trabajo en clases"
+}
+
+### Annotations - create negative
+POST {{baseUrl}}/annotations
+Content-Type: {{contentType}}
+
+{
+  "studentId": 1,
+  "courseId": 1,
+  "schoolYearId": 1,
+  "teacherId": 1,
+  "type": "negative",
+  "content": "Interrumpe durante la clase"
+}
+
+### Attendances - list
+GET {{baseUrl}}/attendances?page=1&limit=20
+
+### Attendances - create one record
+POST {{baseUrl}}/attendances
+Content-Type: {{contentType}}
+
+{
+  "studentId": 1,
+  "courseId": 1,
+  "schoolYearId": 1,
+  "takenByTeacherId": 1,
+  "date": "2026-03-12",
+  "status": "present",
+  "notes": "Llega puntual"
+}
+
+### Attendances - pass list in bulk (recommended)
+POST {{baseUrl}}/attendances/bulk
+Content-Type: {{contentType}}
+
+{
+  "courseId": 1,
+  "schoolYearId": 1,
+  "takenByTeacherId": 1,
+  "date": "2026-03-12",
+  "records": [
+    {
+      "studentId": 1,
+      "status": "present"
+    },
+    {
+      "studentId": 2,
+      "status": "late",
+      "notes": "Atraso de 10 minutos"
+    },
+    {
+      "studentId": 3,
+      "status": "absent",
+      "notes": "Sin justificativo"
+    }
+  ]
+}
+
+### Attendances - filter by course/date range
+GET {{baseUrl}}/attendances?courseId=1&schoolYearId=1&dateFrom=2026-03-01&dateTo=2026-03-31
+
+### Attendances - daily summary by course/date
+GET {{baseUrl}}/attendances/daily-summary?courseId=1&schoolYearId=1&date=2026-03-12
+
+### Attendances - daily summary range (week/month)
+GET {{baseUrl}}/attendances/daily-summary/range?courseId=1&schoolYearId=1&dateFrom=2026-03-09&dateTo=2026-03-13

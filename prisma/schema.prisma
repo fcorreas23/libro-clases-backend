@@ -1,0 +1,256 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum AnnotationType {
+  positive
+  negative
+}
+
+enum AttendanceStatus {
+  present
+  absent
+  late
+  justified_absence
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  firstName    String     @map("first_name")
+  lastName     String     @map("last_name")
+  isActive     Boolean    @default(true) @map("is_active")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  teacher      Teacher?
+  roles        UserRole[]
+
+  @@map("users")
+}
+
+model Role {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  users     UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId Int  @map("user_id")
+  roleId Int  @map("role_id")
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model SchoolYear {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  startDate   DateTime     @map("start_date")
+  endDate     DateTime     @map("end_date")
+  isActive    Boolean      @default(false) @map("is_active")
+
+  courses     Course[]
+  enrollments Enrollment[]
+  grades      Grade[]
+  annotations Annotation[]
+  attendances Attendance[]
+
+  @@map("school_years")
+}
+
+model Teacher {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique @map("user_id")
+  employeeCode String   @unique @map("employee_code")
+  phone        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  homeroomOf   Course[]
+  courseSubjects CourseSubject[]
+  grades       Grade[]
+  annotations  Annotation[]
+  attendances  Attendance[]
+
+  @@map("teachers")
+}
+
+model Course {
+  id                Int        @id @default(autoincrement())
+  name              String
+  level             String
+  letter            String
+  schoolYearId      Int        @map("school_year_id")
+  homeroomTeacherId Int?       @map("homeroom_teacher_id")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  schoolYear        SchoolYear @relation(fields: [schoolYearId], references: [id], onDelete: Restrict)
+  homeroomTeacher   Teacher?   @relation(fields: [homeroomTeacherId], references: [id], onDelete: SetNull)
+  enrollments       Enrollment[]
+  courseSubjects    CourseSubject[]
+  grades            Grade[]
+  annotations       Annotation[]
+  attendances       Attendance[]
+
+  @@unique([schoolYearId, level, letter])
+  @@map("courses")
+}
+
+model Student {
+  id          Int       @id @default(autoincrement())
+  studentCode String    @unique @map("student_code")
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  birthDate   DateTime? @map("birth_date")
+  rut         String?   @unique
+  email       String?   @unique
+  phone       String?
+  address     String?
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  enrollments Enrollment[]
+  grades      Grade[]
+  annotations Annotation[]
+  attendances Attendance[]
+
+  @@map("students")
+}
+
+model Enrollment {
+  id             Int        @id @default(autoincrement())
+  studentId      Int        @map("student_id")
+  courseId       Int        @map("course_id")
+  schoolYearId   Int        @map("school_year_id")
+  status         String     @default("active")
+  enrollmentDate DateTime   @default(now()) @map("enrollment_date")
+
+  student        Student    @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  course         Course     @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  schoolYear     SchoolYear @relation(fields: [schoolYearId], references: [id], onDelete: Restrict)
+
+  @@unique([studentId, schoolYearId])
+  @@map("enrollments")
+}
+
+model Subject {
+  id          Int             @id @default(autoincrement())
+  name        String          @unique
+  code        String          @unique
+  description String?
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  courseSubjects CourseSubject[]
+  grades         Grade[]
+
+  @@map("subjects")
+}
+
+model CourseSubject {
+  id         Int      @id @default(autoincrement())
+  courseId   Int      @map("course_id")
+  subjectId  Int      @map("subject_id")
+  teacherId  Int?     @map("teacher_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  subject    Subject  @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  teacher    Teacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+  grades     Grade[]
+
+  @@unique([courseId, subjectId])
+  @@map("course_subjects")
+}
+
+model Grade {
+  id              Int           @id @default(autoincrement())
+  studentId       Int           @map("student_id")
+  courseId        Int           @map("course_id")
+  schoolYearId    Int           @map("school_year_id")
+  subjectId       Int           @map("subject_id")
+  courseSubjectId Int           @map("course_subject_id")
+  teacherId       Int           @map("teacher_id")
+  title           String
+  value           Decimal       @db.Decimal(3, 1)
+  observations    String?
+  recordedAt      DateTime      @default(now()) @map("recorded_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  student         Student       @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  course          Course        @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  schoolYear      SchoolYear    @relation(fields: [schoolYearId], references: [id], onDelete: Restrict)
+  subject         Subject       @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  courseSubject   CourseSubject @relation(fields: [courseSubjectId], references: [id], onDelete: Restrict)
+  teacher         Teacher       @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+
+  @@index([studentId, recordedAt])
+  @@index([courseId, subjectId, schoolYearId])
+  @@map("grades")
+}
+
+model Annotation {
+  id           Int            @id @default(autoincrement())
+  studentId    Int            @map("student_id")
+  courseId     Int            @map("course_id")
+  schoolYearId Int            @map("school_year_id")
+  teacherId    Int            @map("teacher_id")
+  type         AnnotationType
+  content      String
+  recordedAt   DateTime       @default(now()) @map("recorded_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+
+  student      Student        @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  schoolYear   SchoolYear     @relation(fields: [schoolYearId], references: [id], onDelete: Restrict)
+  teacher      Teacher        @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+
+  @@index([studentId, recordedAt])
+  @@index([courseId, schoolYearId])
+  @@map("annotations")
+}
+
+model Attendance {
+  id              Int              @id @default(autoincrement())
+  studentId       Int              @map("student_id")
+  courseId        Int              @map("course_id")
+  schoolYearId    Int              @map("school_year_id")
+  takenByTeacherId Int?            @map("taken_by_teacher_id")
+  date            DateTime
+  status          AttendanceStatus
+  notes           String?
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  student         Student          @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  course          Course           @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  schoolYear      SchoolYear       @relation(fields: [schoolYearId], references: [id], onDelete: Restrict)
+  takenByTeacher  Teacher?         @relation(fields: [takenByTeacherId], references: [id], onDelete: SetNull)
+
+  @@unique([studentId, courseId, schoolYearId, date])
+  @@index([courseId, schoolYearId, date])
+  @@index([studentId, date])
+  @@map("attendances")
+}
