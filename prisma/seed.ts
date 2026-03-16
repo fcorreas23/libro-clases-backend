@@ -31,9 +31,9 @@ async function main() {
   console.log('Seed completado');
   console.log(`Password por defecto: ${defaultPassword}`);
   console.log('Admin: admin@colegio.cl');
-  console.log('Cursos creados: 1B-A, 2B-A, 3B-A');
+  console.log('Cursos creados: 1A .. 8A');
   console.log(`Alumnos creados: ${studentsToSeed.length}`);
-  console.log('Asignaturas creadas: MAT, LEN, CIE');
+  console.log('Asignaturas creadas: MAT, LEN, CIE, HIS, ING, EF, ART, MUS, TEC, ORI, REL');
   console.log('Notas y anotaciones de ejemplo creadas');
   console.log(
     `Asistencia de ejemplo creada: ${attendanceSummary.studentsSeeded} alumnos x ${attendanceSummary.daysSeeded} dias`,

@@ -64,24 +64,14 @@ export const teacherProfiles = [
 ] as const;
 
 export const coursesToSeed = [
-  {
-    name: '1ro Basico A',
-    level: '1B',
-    letter: 'A',
-    homeroomTeacherEmail: 'profesor.jefe@colegio.cl',
-  },
-  {
-    name: '2do Basico A',
-    level: '2B',
-    letter: 'A',
-    homeroomTeacherEmail: 'profesor.lenguaje@colegio.cl',
-  },
-  {
-    name: '3ro Basico A',
-    level: '3B',
-    letter: 'A',
-    homeroomTeacherEmail: 'profesor.matematica@colegio.cl',
-  },
+  { name: '1ro Basico A', level: '1', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '2do Basico A', level: '2', letter: 'A', homeroomTeacherEmail: 'profesor.lenguaje@colegio.cl' },
+  { name: '3ro Basico A', level: '3', letter: 'A', homeroomTeacherEmail: 'profesor.matematica@colegio.cl' },
+  { name: '4to Basico A', level: '4', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '5to Basico A', level: '5', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '6to Basico A', level: '6', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '7mo Basico A', level: '7', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '8vo Basico A', level: '8', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
 ] as const;
 
 export const studentsToSeed = [
@@ -94,7 +84,7 @@ export const studentsToSeed = [
     email: 'isidora.gonzalez@alumnos.colegio.cl',
     phone: '+56911111111',
     address: 'Av. Los Alerces 123',
-    courseLevel: '1B',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -106,7 +96,7 @@ export const studentsToSeed = [
     email: 'mateo.fernandez@alumnos.colegio.cl',
     phone: '+56922222222',
     address: 'Pasaje El Roble 456',
-    courseLevel: '1B',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -118,7 +108,7 @@ export const studentsToSeed = [
     email: 'florencia.castillo@alumnos.colegio.cl',
     phone: '+56933333333',
     address: 'Calle Los Copihues 789',
-    courseLevel: '1B',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -130,7 +120,7 @@ export const studentsToSeed = [
     email: 'benjamin.navarro@alumnos.colegio.cl',
     phone: '+56944441111',
     address: 'Calle O Higgins 112',
-    courseLevel: '1B',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -142,7 +132,7 @@ export const studentsToSeed = [
     email: 'vicente.araya@alumnos.colegio.cl',
     phone: '+56911112222',
     address: 'Av. Libertad 220',
-    courseLevel: '2B',
+    courseLevel: '2',
     courseLetter: 'A',
   },
   {
@@ -154,7 +144,7 @@ export const studentsToSeed = [
     email: 'martina.pino@alumnos.colegio.cl',
     phone: '+56922223333',
     address: 'Pasaje Quillota 18',
-    courseLevel: '2B',
+    courseLevel: '2',
     courseLetter: 'A',
   },
   {
@@ -166,7 +156,7 @@ export const studentsToSeed = [
     email: 'agustin.leiva@alumnos.colegio.cl',
     phone: '+56933334444',
     address: 'Calle Los Notros 778',
-    courseLevel: '2B',
+    courseLevel: '2',
     courseLetter: 'A',
   },
   {
@@ -178,7 +168,7 @@ export const studentsToSeed = [
     email: 'antonia.sepulveda@alumnos.colegio.cl',
     phone: '+56944445555',
     address: 'Av. Cuarta 995',
-    courseLevel: '2B',
+    courseLevel: '2',
     courseLetter: 'A',
   },
   {
@@ -190,7 +180,7 @@ export const studentsToSeed = [
     email: 'joaquin.sanhueza@alumnos.colegio.cl',
     phone: '+56955556666',
     address: 'Calle Norte 330',
-    courseLevel: '3B',
+    courseLevel: '3',
     courseLetter: 'A',
   },
   {
@@ -202,7 +192,7 @@ export const studentsToSeed = [
     email: 'renata.molina@alumnos.colegio.cl',
     phone: '+56966667777',
     address: 'Pasaje Las Rosas 901',
-    courseLevel: '3B',
+    courseLevel: '3',
     courseLetter: 'A',
   },
   {
@@ -214,7 +204,7 @@ export const studentsToSeed = [
     email: 'alonso.mardones@alumnos.colegio.cl',
     phone: '+56977778888',
     address: 'Calle Sur 442',
-    courseLevel: '3B',
+    courseLevel: '3',
     courseLetter: 'A',
   },
   {
@@ -226,7 +216,7 @@ export const studentsToSeed = [
     email: 'emilia.lagos@alumnos.colegio.cl',
     phone: '+56988889999',
     address: 'Av. Principal 1500',
-    courseLevel: '3B',
+    courseLevel: '3',
     courseLetter: 'A',
   },
 ] as const;
@@ -247,137 +237,54 @@ export const subjectsToSeed = [
     code: 'CIE',
     description: 'Exploracion del mundo natural',
   },
+  {
+    name: 'Historia, Geografía y Ciencias Sociales',
+    code: 'HIS',
+    description: 'Estudio del pasado, sociedad y espacio geografico',
+  },
+  { name: 'Inglés', code: 'ING', description: 'Aprendizaje del idioma ingles' },
+  { name: 'Educación Física y Salud', code: 'EF', description: 'Actividad fisica y salud' },
+  { name: 'Artes Visuales', code: 'ART', description: 'Expresion artistica y visual' },
+  { name: 'Música', code: 'MUS', description: 'Educacion musical y auditiva' },
+  { name: 'Tecnología', code: 'TEC', description: 'TIC y herramientas tecnicas' },
+  { name: 'Orientación', code: 'ORI', description: 'Orientacion y apoyo psicopedagogico' },
+  { name: 'Religión', code: 'REL', description: 'Formacion religiosa y valores' },
 ] as const;
 
 export const courseSubjectsToSeed = [
-  {
-    courseLevel: '1B',
-    courseLetter: 'A',
-    subjectCode: 'MAT',
-    teacherEmail: 'profesor.matematica@colegio.cl',
-  },
-  {
-    courseLevel: '1B',
-    courseLetter: 'A',
-    subjectCode: 'LEN',
-    teacherEmail: 'profesor.lenguaje@colegio.cl',
-  },
-  {
-    courseLevel: '1B',
-    courseLetter: 'A',
-    subjectCode: 'CIE',
-    teacherEmail: 'profesor.jefe@colegio.cl',
-  },
-  {
-    courseLevel: '2B',
-    courseLetter: 'A',
-    subjectCode: 'MAT',
-    teacherEmail: 'profesor.matematica@colegio.cl',
-  },
-  {
-    courseLevel: '2B',
-    courseLetter: 'A',
-    subjectCode: 'LEN',
-    teacherEmail: 'profesor.lenguaje@colegio.cl',
-  },
-  {
-    courseLevel: '2B',
-    courseLetter: 'A',
-    subjectCode: 'CIE',
-    teacherEmail: 'profesor.jefe@colegio.cl',
-  },
-  {
-    courseLevel: '3B',
-    courseLetter: 'A',
-    subjectCode: 'MAT',
-    teacherEmail: 'profesor.matematica@colegio.cl',
-  },
-  {
-    courseLevel: '3B',
-    courseLetter: 'A',
-    subjectCode: 'LEN',
-    teacherEmail: 'profesor.lenguaje@colegio.cl',
-  },
-  {
-    courseLevel: '3B',
-    courseLetter: 'A',
-    subjectCode: 'CIE',
-    teacherEmail: 'profesor.jefe@colegio.cl',
-  },
+  { courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl' },
+  { courseLevel: '1', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl' },
+  { courseLevel: '1', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl' },
+  { courseLevel: '1', courseLetter: 'A', subjectCode: 'HIS', teacherEmail: 'profesor.jefe@colegio.cl' },
+  { courseLevel: '2', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl' },
+  { courseLevel: '2', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl' },
+  { courseLevel: '2', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl' },
+  { courseLevel: '3', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl' },
+  { courseLevel: '3', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl' },
+  { courseLevel: '3', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl' },
 ] as const;
 
 export const gradesToSeed = [
-  {
-    studentCode: 'STU-2026-001',
-    courseLevel: '1B',
-    courseLetter: 'A',
-    subjectCode: 'MAT',
-    teacherEmail: 'profesor.matematica@colegio.cl',
-    title: 'Prueba Diagnostica 1',
-    value: 6.2,
-  },
-  {
-    studentCode: 'STU-2026-002',
-    courseLevel: '1B',
-    courseLetter: 'A',
-    subjectCode: 'LEN',
-    teacherEmail: 'profesor.lenguaje@colegio.cl',
-    title: 'Control Comprension Lectora',
-    value: 5.8,
-  },
-  {
-    studentCode: 'STU-2026-006',
-    courseLevel: '2B',
-    courseLetter: 'A',
-    subjectCode: 'MAT',
-    teacherEmail: 'profesor.matematica@colegio.cl',
-    title: 'Ejercicios Operatoria',
-    value: 6.5,
-  },
-  {
-    studentCode: 'STU-2026-009',
-    courseLevel: '3B',
-    courseLetter: 'A',
-    subjectCode: 'CIE',
-    teacherEmail: 'profesor.jefe@colegio.cl',
-    title: 'Laboratorio Plantas',
-    value: 5.9,
-  },
+  { studentCode: 'STU-2026-001', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl', title: 'Prueba Diagnostica 1', value: 6.2 },
+  { studentCode: 'STU-2026-002', courseLevel: '1', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl', title: 'Control Comprension Lectora', value: 5.8 },
+  { studentCode: 'STU-2026-006', courseLevel: '2', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl', title: 'Ejercicios Operatoria', value: 6.5 },
+  { studentCode: 'STU-2026-009', courseLevel: '3', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl', title: 'Laboratorio Plantas', value: 5.9 },
 ] as const;
 
 export const annotationsToSeed = [
-  {
-    studentCode: 'STU-2026-001',
-    courseLevel: '1B',
-    courseLetter: 'A',
-    teacherEmail: 'profesor.jefe@colegio.cl',
-    type: AnnotationType.positive,
-    content: 'Participa activamente y apoya a sus companeros en clases.',
-  },
-  {
-    studentCode: 'STU-2026-007',
-    courseLevel: '2B',
-    courseLetter: 'A',
-    teacherEmail: 'profesor.lenguaje@colegio.cl',
-    type: AnnotationType.negative,
-    content: 'Interrumpe durante la clase y no respeta turnos de palabra.',
-  },
-  {
-    studentCode: 'STU-2026-010',
-    courseLevel: '3B',
-    courseLetter: 'A',
-    teacherEmail: 'profesor.matematica@colegio.cl',
-    type: AnnotationType.positive,
-    content: 'Mejoro su desempeno y entrega tareas a tiempo.',
-  },
+  { studentCode: 'STU-2026-001', courseLevel: '1', courseLetter: 'A', teacherEmail: 'profesor.jefe@colegio.cl', type: AnnotationType.positive, content: 'Participa activamente y apoya a sus companeros en clases.' },
+  { studentCode: 'STU-2026-007', courseLevel: '2', courseLetter: 'A', teacherEmail: 'profesor.lenguaje@colegio.cl', type: AnnotationType.negative, content: 'Interrumpe durante la clase y no respeta turnos de palabra.' },
+  { studentCode: 'STU-2026-010', courseLevel: '3', courseLetter: 'A', teacherEmail: 'profesor.matematica@colegio.cl', type: AnnotationType.positive, content: 'Mejoro su desempeno y entrega tareas a tiempo.' },
 ] as const;
 
 export type SeededUser = (typeof usersToSeed)[number] & { id: number };
 
 export function toCourseKey(level: string, letter: string) {
-  return `${level}-${letter}`;
+  // Produce compact course code like '1A'
+  return `${level}${letter}`;
 }
 
 export function toCourseSubjectKey(level: string, letter: string, subjectCode: string) {
-  return `${level}-${letter}-${subjectCode}`;
+  // Produce keys like '1A-MAT'
+  return `${level}${letter}-${subjectCode}`;
 }

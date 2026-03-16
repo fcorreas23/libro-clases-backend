@@ -93,8 +93,13 @@ export class CourseSubjectsService {
 
   async remove(id: number) {
     await this.findOne(id);
-    return this.prisma.courseSubject.delete({
-      where: { id },
-    });
+
+    // Check for dependent grades that reference this course_subject.
+    const dependentGrades = await this.prisma.grade.count({ where: { courseSubjectId: id } });
+    if (dependentGrades > 0) {
+      throw new ForbiddenException(`No se puede eliminar la asignación: existen ${dependentGrades} calificaciones asociadas. Elimine o reasocie esas calificaciones antes de borrar la asignación.`);
+    }
+
+    return this.prisma.courseSubject.delete({ where: { id } });
   }
 }
