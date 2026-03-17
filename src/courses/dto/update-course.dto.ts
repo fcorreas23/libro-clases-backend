@@ -8,7 +8,7 @@ export class UpdateCourseDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(2)
+  @MinLength(1)
   level?: string;
 
   @IsOptional()

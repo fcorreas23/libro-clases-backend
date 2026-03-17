@@ -108,7 +108,7 @@ export class TeachersService {
       },
       skip,
       take: limit,
-      orderBy: { id: 'asc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     });
   }
 
