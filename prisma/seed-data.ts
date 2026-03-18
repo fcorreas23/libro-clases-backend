@@ -26,52 +26,34 @@ export const usersToSeed = [
     role: 'inspector',
   },
   {
-    email: 'profesor.jefe@colegio.cl',
-    firstName: 'Carolina',
-    lastName: 'Perez',
+    email: 'rzurita@colegio.cl',
+    firstName: 'Romina',
+    lastName: 'Zurita',
     role: 'teacher',
   },
   {
-    email: 'profesor.lenguaje@colegio.cl',
-    firstName: 'Rocio',
-    lastName: 'Vidal',
+    email: 'fcorrea@colegio.cl',
+    firstName: 'Francisco',
+    lastName: 'Correa',
     role: 'teacher',
-  },
-  {
-    email: 'profesor.matematica@colegio.cl',
-    firstName: 'Diego',
-    lastName: 'Carrasco',
-    role: 'teacher',
-  },
+  }
 ] as const;
 
 export const teacherProfiles = [
   {
-    email: 'profesor.jefe@colegio.cl',
+    email: 'rzurita@colegio.cl',
     employeeCode: 'DOC-2026-001',
     phone: '+56944444444',
   },
   {
-    email: 'profesor.lenguaje@colegio.cl',
+    email: 'fcorrea@colegio.cl',
     employeeCode: 'DOC-2026-002',
     phone: '+56955555555',
-  },
-  {
-    email: 'profesor.matematica@colegio.cl',
-    employeeCode: 'DOC-2026-003',
-    phone: '+56966666666',
-  },
+  }
 ] as const;
 
 export const coursesToSeed = [
-  { name: '1ro Básico A', level: '1', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '2do Básico A', level: '2', letter: 'A', homeroomTeacherEmail: 'profesor.lenguaje@colegio.cl' },
-  { name: '3ro Básico A', level: '3', letter: 'A', homeroomTeacherEmail: 'profesor.matematica@colegio.cl' },
-  { name: '4to Básico A', level: '4', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '5to Básico A', level: '5', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '6to Básico A', level: '6', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '7mo Básico A', level: '7', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '8vo Básico A', level: '8', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '1ro Básico A', level: '1', letter: 'A', homeroomTeacherEmail: 'rzurita@colegio.cl' },
 ] as const;
 
 export const studentsToSeed = [
@@ -252,29 +234,30 @@ export const subjectsToSeed = [
 ] as const;
 
 export const courseSubjectsToSeed = [
-  { courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl' },
-  { courseLevel: '1', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl' },
-  { courseLevel: '1', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl' },
-  { courseLevel: '1', courseLetter: 'A', subjectCode: 'HIS', teacherEmail: 'profesor.jefe@colegio.cl' },
-  { courseLevel: '2', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl' },
-  { courseLevel: '2', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl' },
-  { courseLevel: '2', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl' },
-  { courseLevel: '3', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl' },
-  { courseLevel: '3', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl' },
-  { courseLevel: '3', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl' },
+  { courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl' },
+  { courseLevel: '1', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'fcorrea@colegio.cl' },
 ] as const;
 
 export const gradesToSeed = [
-  { studentCode: 'STU-2026-001', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl', title: 'Prueba Diagnostica 1', value: 6.2 },
-  { studentCode: 'STU-2026-002', courseLevel: '1', courseLetter: 'A', subjectCode: 'LEN', teacherEmail: 'profesor.lenguaje@colegio.cl', title: 'Control Comprension Lectora', value: 5.8 },
-  { studentCode: 'STU-2026-006', courseLevel: '2', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'profesor.matematica@colegio.cl', title: 'Ejercicios Operatoria', value: 6.5 },
-  { studentCode: 'STU-2026-009', courseLevel: '3', courseLetter: 'A', subjectCode: 'CIE', teacherEmail: 'profesor.jefe@colegio.cl', title: 'Laboratorio Plantas', value: 5.9 },
+  { studentCode: 'STU-2026-001', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 6.2 },
+  { studentCode: 'STU-2026-002', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 5.8 },
+  { studentCode: 'STU-2026-003', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 6.2 },
+  { studentCode: 'STU-2026-004', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 5.5 },
+  { studentCode: 'STU-2026-005', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 5.3 },
+  { studentCode: 'STU-2026-006', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 5.7 },
+  { studentCode: 'STU-2026-007', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 5.5 },
+  { studentCode: 'STU-2026-008', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 6.3 },
+  { studentCode: 'STU-2026-009', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 9.9 },
+  { studentCode: 'STU-2026-010', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 5.9 },
+  { studentCode: 'STU-2026-011', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 4.2 },
+  { studentCode: 'STU-2026-012', courseLevel: '1', courseLetter: 'A', subjectCode: 'MAT', teacherEmail: 'rzurita@colegio.cl', title: 'Prueba Diagnostica 1', value: 3.9 },
+
 ] as const;
 
 export const annotationsToSeed = [
-  { studentCode: 'STU-2026-001', courseLevel: '1', courseLetter: 'A', teacherEmail: 'profesor.jefe@colegio.cl', type: AnnotationType.positive, content: 'Participa activamente y apoya a sus companeros en clases.' },
-  { studentCode: 'STU-2026-007', courseLevel: '2', courseLetter: 'A', teacherEmail: 'profesor.lenguaje@colegio.cl', type: AnnotationType.negative, content: 'Interrumpe durante la clase y no respeta turnos de palabra.' },
-  { studentCode: 'STU-2026-010', courseLevel: '3', courseLetter: 'A', teacherEmail: 'profesor.matematica@colegio.cl', type: AnnotationType.positive, content: 'Mejoro su desempeno y entrega tareas a tiempo.' },
+  { studentCode: 'STU-2026-001', courseLevel: '1', courseLetter: 'A', teacherEmail: 'rzurita@colegio.cl', type: AnnotationType.positive, content: 'Participa activamente y apoya a sus companeros en clases.' },
+  { studentCode: 'STU-2026-007', courseLevel: '1', courseLetter: 'A', teacherEmail: 'rzurita@colegio.cl', type: AnnotationType.negative, content: 'Interrumpe durante la clase y no respeta turnos de palabra.' },
+  { studentCode: 'STU-2026-010', courseLevel: '1', courseLetter: 'A', teacherEmail: 'rzurita@colegio.cl', type: AnnotationType.positive, content: 'Mejoro su desempeno y entrega tareas a tiempo.' },
 ] as const;
 
 export type SeededUser = (typeof usersToSeed)[number] & { id: number };
