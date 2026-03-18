@@ -26,11 +26,13 @@ export class EnrollmentsController {
   }
 
   @Get()
+  @Roles('admin', 'utp')
   findAll(@Query() query: EnrollmentsQueryDto) {
     return this.enrollmentsService.findAll(query);
   }
 
   @Get(':id')
+  @Roles('admin', 'utp')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.enrollmentsService.findOne(id);
   }

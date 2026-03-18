@@ -36,13 +36,13 @@ export class AttendancesController {
     return this.attendancesService.bulkUpsert(data, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get()
   findAll(@Query() query: AttendancesQueryDto, @CurrentUser() user: AuthenticatedUser) {
     return this.attendancesService.findAll(query, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get('daily-summary')
   dailySummary(
     @Query() query: AttendanceDailySummaryQueryDto,
@@ -51,7 +51,7 @@ export class AttendancesController {
     return this.attendancesService.getDailySummary(query, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get('daily-summary/range')
   dailySummaryRange(
     @Query() query: AttendanceRangeSummaryQueryDto,
@@ -60,7 +60,7 @@ export class AttendancesController {
     return this.attendancesService.getDailySummaryRange(query, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
     return this.attendancesService.findOne(id, user);

@@ -27,13 +27,13 @@ export class AnnotationsController {
     return this.annotationsService.create(data, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get()
   findAll(@Query() query: AnnotationsQueryDto, @CurrentUser() user: AuthenticatedUser) {
     return this.annotationsService.findAll(query, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get(':id')
   findOne(
     @Param('id', ParseIntPipe) id: number,

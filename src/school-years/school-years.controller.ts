@@ -25,13 +25,13 @@ export class SchoolYearsController {
     return this.schoolYearsService.create(data);
   }
 
-  @Roles('admin')
+  @Roles('admin', 'utp')
   @Get()
   findAll(@Query() query: SchoolYearsQueryDto) {
     return this.schoolYearsService.findAll(query);
   }
 
-  @Roles('admin')
+  @Roles('admin', 'utp')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.schoolYearsService.findOne(id);

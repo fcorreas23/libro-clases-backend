@@ -25,13 +25,13 @@ export class SubjectsController {
     return this.subjectsService.create(data);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get()
   findAll(@Query() query: SubjectsQueryDto) {
     return this.subjectsService.findAll(query);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.subjectsService.findOne(id);

@@ -33,13 +33,13 @@ export class StudentsController {
     return this.studentsService.generateCode();
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get()
   findAll(@Query() query: StudentsQueryDto, @CurrentUser() user: AuthenticatedUser) {
     return this.studentsService.findAll(query, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
     return this.studentsService.findOne(id, user);

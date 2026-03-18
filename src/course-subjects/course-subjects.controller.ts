@@ -27,13 +27,13 @@ export class CourseSubjectsController {
     return this.courseSubjectsService.create(data);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get()
   findAll(@Query() query: CourseSubjectsQueryDto, @CurrentUser() user: AuthenticatedUser) {
     return this.courseSubjectsService.findAll(query, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
     return this.courseSubjectsService.findOne(id, user);

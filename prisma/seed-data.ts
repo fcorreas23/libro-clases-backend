@@ -64,14 +64,14 @@ export const teacherProfiles = [
 ] as const;
 
 export const coursesToSeed = [
-  { name: '1ro Basico A', level: '1', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '2do Basico A', level: '2', letter: 'A', homeroomTeacherEmail: 'profesor.lenguaje@colegio.cl' },
-  { name: '3ro Basico A', level: '3', letter: 'A', homeroomTeacherEmail: 'profesor.matematica@colegio.cl' },
-  { name: '4to Basico A', level: '4', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '5to Basico A', level: '5', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '6to Basico A', level: '6', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '7mo Basico A', level: '7', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
-  { name: '8vo Basico A', level: '8', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '1ro Básico A', level: '1', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '2do Básico A', level: '2', letter: 'A', homeroomTeacherEmail: 'profesor.lenguaje@colegio.cl' },
+  { name: '3ro Básico A', level: '3', letter: 'A', homeroomTeacherEmail: 'profesor.matematica@colegio.cl' },
+  { name: '4to Básico A', level: '4', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '5to Básico A', level: '5', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '6to Básico A', level: '6', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '7mo Básico A', level: '7', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
+  { name: '8vo Básico A', level: '8', letter: 'A', homeroomTeacherEmail: 'profesor.jefe@colegio.cl' },
 ] as const;
 
 export const studentsToSeed = [
@@ -132,7 +132,7 @@ export const studentsToSeed = [
     email: 'vicente.araya@alumnos.colegio.cl',
     phone: '+56911112222',
     address: 'Av. Libertad 220',
-    courseLevel: '2',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -144,7 +144,7 @@ export const studentsToSeed = [
     email: 'martina.pino@alumnos.colegio.cl',
     phone: '+56922223333',
     address: 'Pasaje Quillota 18',
-    courseLevel: '2',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -156,7 +156,7 @@ export const studentsToSeed = [
     email: 'agustin.leiva@alumnos.colegio.cl',
     phone: '+56933334444',
     address: 'Calle Los Notros 778',
-    courseLevel: '2',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -168,7 +168,7 @@ export const studentsToSeed = [
     email: 'antonia.sepulveda@alumnos.colegio.cl',
     phone: '+56944445555',
     address: 'Av. Cuarta 995',
-    courseLevel: '2',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -180,7 +180,7 @@ export const studentsToSeed = [
     email: 'joaquin.sanhueza@alumnos.colegio.cl',
     phone: '+56955556666',
     address: 'Calle Norte 330',
-    courseLevel: '3',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -192,7 +192,7 @@ export const studentsToSeed = [
     email: 'renata.molina@alumnos.colegio.cl',
     phone: '+56966667777',
     address: 'Pasaje Las Rosas 901',
-    courseLevel: '3',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -204,7 +204,7 @@ export const studentsToSeed = [
     email: 'alonso.mardones@alumnos.colegio.cl',
     phone: '+56977778888',
     address: 'Calle Sur 442',
-    courseLevel: '3',
+    courseLevel: '1',
     courseLetter: 'A',
   },
   {
@@ -216,7 +216,7 @@ export const studentsToSeed = [
     email: 'emilia.lagos@alumnos.colegio.cl',
     phone: '+56988889999',
     address: 'Av. Principal 1500',
-    courseLevel: '3',
+    courseLevel: '1',
     courseLetter: 'A',
   },
 ] as const;

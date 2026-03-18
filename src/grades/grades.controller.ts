@@ -27,13 +27,13 @@ export class GradesController {
     return this.gradesService.create(data, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get()
   findAll(@Query() query: GradesQueryDto, @CurrentUser() user: AuthenticatedUser) {
     return this.gradesService.findAll(query, user);
   }
 
-  @Roles('admin', 'teacher')
+  @Roles('admin', 'teacher', 'utp')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
     return this.gradesService.findOne(id, user);
