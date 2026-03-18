@@ -27,9 +27,7 @@ export class UsersService {
     const skip = (page - 1) * limit;
     const where: Prisma.UserWhereInput = {
       isActive:
-        query.isActive === undefined
-          ? undefined
-          : query.isActive === 'true',
+        query.isActive === undefined ? undefined : query.isActive === 'true',
       OR: query.q
         ? [
             { email: { contains: query.q } },

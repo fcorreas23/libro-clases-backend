@@ -26,19 +26,28 @@ export class AttendancesController {
 
   @Roles('admin', 'teacher')
   @Post()
-  create(@Body() data: CreateAttendanceDto, @CurrentUser() user: AuthenticatedUser) {
+  create(
+    @Body() data: CreateAttendanceDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.attendancesService.create(data, user);
   }
 
   @Roles('admin', 'teacher')
   @Post('bulk')
-  bulkUpsert(@Body() data: BulkUpsertAttendanceDto, @CurrentUser() user: AuthenticatedUser) {
+  bulkUpsert(
+    @Body() data: BulkUpsertAttendanceDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.attendancesService.bulkUpsert(data, user);
   }
 
   @Roles('admin', 'teacher', 'utp')
   @Get()
-  findAll(@Query() query: AttendancesQueryDto, @CurrentUser() user: AuthenticatedUser) {
+  findAll(
+    @Query() query: AttendancesQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.attendancesService.findAll(query, user);
   }
 
@@ -62,7 +71,10 @@ export class AttendancesController {
 
   @Roles('admin', 'teacher', 'utp')
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.attendancesService.findOne(id, user);
   }
 
@@ -78,7 +90,10 @@ export class AttendancesController {
 
   @Roles('admin', 'teacher')
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.attendancesService.remove(id, user);
   }
 }

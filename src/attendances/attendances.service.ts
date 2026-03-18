@@ -81,7 +81,11 @@ export class AttendancesService {
     return date.toISOString().slice(0, 10);
   }
 
-  private async ensureStudentEnrollment(studentId: number, courseId: number, schoolYearId: number) {
+  private async ensureStudentEnrollment(
+    studentId: number,
+    courseId: number,
+    schoolYearId: number,
+  ) {
     const enrollment = await this.prisma.enrollment.findFirst({
       where: {
         studentId,
@@ -101,12 +105,18 @@ export class AttendancesService {
     if (user.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (data.takenByTeacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only record attendance with their own teacherId');
+        throw new ForbiddenException(
+          'Teachers can only record attendance with their own teacherId',
+        );
       }
       await this.ensureTeacherCourseAccess(teacherId, data.courseId);
     }
 
-    await this.ensureStudentEnrollment(data.studentId, data.courseId, data.schoolYearId);
+    await this.ensureStudentEnrollment(
+      data.studentId,
+      data.courseId,
+      data.schoolYearId,
+    );
 
     return this.prisma.attendance.create({
       data: {
@@ -125,7 +135,9 @@ export class AttendancesService {
     if (user.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (data.takenByTeacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only record attendance with their own teacherId');
+        throw new ForbiddenException(
+          'Teachers can only record attendance with their own teacherId',
+        );
       }
       await this.ensureTeacherCourseAccess(teacherId, data.courseId);
     }
@@ -133,10 +145,16 @@ export class AttendancesService {
     const seen = new Set<number>();
     for (const record of data.records) {
       if (seen.has(record.studentId)) {
-        throw new BadRequestException(`Duplicate studentId ${record.studentId} in records`);
+        throw new BadRequestException(
+          `Duplicate studentId ${record.studentId} in records`,
+        );
       }
       seen.add(record.studentId);
-      await this.ensureStudentEnrollment(record.studentId, data.courseId, data.schoolYearId);
+      await this.ensureStudentEnrollment(
+        record.studentId,
+        data.courseId,
+        data.schoolYearId,
+      );
     }
 
     const date = this.normalizeDate(data.date);
@@ -212,9 +230,15 @@ export class AttendancesService {
     });
   }
 
-  async getDailySummary(query: AttendanceDailySummaryQueryDto, user: AuthenticatedUser) {
+  async getDailySummary(
+    query: AttendanceDailySummaryQueryDto,
+    user: AuthenticatedUser,
+  ) {
     if (user.roles.includes('teacher')) {
-      await this.ensureTeacherCourseAccess(this.ensureTeacherContext(user), query.courseId);
+      await this.ensureTeacherCourseAccess(
+        this.ensureTeacherContext(user),
+        query.courseId,
+      );
     }
 
     const { start, end } = this.dayRange(query.date);
@@ -254,7 +278,9 @@ export class AttendancesService {
     const attendanceRate =
       enrolledCount === 0
         ? 0
-        : Number((((counts.present + counts.late) / enrolledCount) * 100).toFixed(2));
+        : Number(
+            (((counts.present + counts.late) / enrolledCount) * 100).toFixed(2),
+          );
 
     return {
       courseId: query.courseId,
@@ -271,16 +297,24 @@ export class AttendancesService {
     };
   }
 
-  async getDailySummaryRange(query: AttendanceRangeSummaryQueryDto, user: AuthenticatedUser) {
+  async getDailySummaryRange(
+    query: AttendanceRangeSummaryQueryDto,
+    user: AuthenticatedUser,
+  ) {
     if (user.roles.includes('teacher')) {
-      await this.ensureTeacherCourseAccess(this.ensureTeacherContext(user), query.courseId);
+      await this.ensureTeacherCourseAccess(
+        this.ensureTeacherContext(user),
+        query.courseId,
+      );
     }
 
     const { start: rangeStart } = this.dayRange(query.dateFrom);
     const { end: rangeEnd } = this.dayRange(query.dateTo);
 
     if (rangeStart > rangeEnd) {
-      throw new BadRequestException('dateFrom must be lower than or equal to dateTo');
+      throw new BadRequestException(
+        'dateFrom must be lower than or equal to dateTo',
+      );
     }
 
     const [attendances, enrolledCount] = await Promise.all([
@@ -315,7 +349,9 @@ export class AttendancesService {
 
     for (const record of attendances) {
       const key = this.dateToDayKey(record.date);
-      const current = summaryByDay.get(key) ?? { counts: this.emptyStatusCounts() };
+      const current = summaryByDay.get(key) ?? {
+        counts: this.emptyStatusCounts(),
+      };
       current.counts[record.status] += 1;
       summaryByDay.set(key, current);
     }
@@ -340,7 +376,11 @@ export class AttendancesService {
       const attendanceRate =
         enrolledCount === 0
           ? 0
-          : Number((((counts.present + counts.late) / enrolledCount) * 100).toFixed(2));
+          : Number(
+              (((counts.present + counts.late) / enrolledCount) * 100).toFixed(
+                2,
+              ),
+            );
 
       days.push({
         date: key,
@@ -375,7 +415,12 @@ export class AttendancesService {
     const attendanceRate =
       expectedRecords === 0
         ? 0
-        : Number((((rangeCounts.present + rangeCounts.late) / expectedRecords) * 100).toFixed(2));
+        : Number(
+            (
+              ((rangeCounts.present + rangeCounts.late) / expectedRecords) *
+              100
+            ).toFixed(2),
+          );
 
     return {
       courseId: query.courseId,
@@ -418,7 +463,9 @@ export class AttendancesService {
     if (user.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (attendance.takenByTeacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only access their own attendance records');
+        throw new ForbiddenException(
+          'Teachers can only access their own attendance records',
+        );
       }
     }
 

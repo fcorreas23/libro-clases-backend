@@ -15,6 +15,11 @@ const UNIQUE_FIELD_MESSAGES: Record<string, string> = {
   name: 'El nombre ya está en uso',
 };
 
+const FOREIGN_KEY_FIELD_MESSAGES: Record<string, string> = {
+  teacher_id:
+    'No se puede eliminar el profesor porque tiene datos vinculados. Elimina o reasigna esos registros primero.',
+};
+
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(PrismaExceptionFilter.name);
@@ -43,6 +48,21 @@ export class PrismaExceptionFilter implements ExceptionFilter {
           statusCode: HttpStatus.NOT_FOUND,
           error: 'Not Found',
           message: 'El registro no fue encontrado',
+        });
+      }
+
+      case 'P2003': {
+        const fieldNameMeta = exception.meta?.field_name;
+        const fieldName =
+          typeof fieldNameMeta === 'string' ? fieldNameMeta.toLowerCase() : '';
+        const message =
+          FOREIGN_KEY_FIELD_MESSAGES[fieldName] ??
+          'No se puede eliminar el registro porque tiene datos vinculados. Elimina o reasigna esos registros primero.';
+
+        return response.status(HttpStatus.CONFLICT).json({
+          statusCode: HttpStatus.CONFLICT,
+          error: 'Conflict',
+          message,
         });
       }
 

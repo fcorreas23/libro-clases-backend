@@ -25,13 +25,13 @@ export class CoursesController {
     return this.coursesService.create(data);
   }
 
-  @Roles('admin', 'teacher', 'utp')
+  @Roles('admin', 'teacher', 'utp', 'inspector')
   @Get()
   findAll(@Query() query: CoursesQueryDto) {
     return this.coursesService.findAll(query);
   }
 
-  @Roles('admin', 'teacher', 'utp')
+  @Roles('admin', 'teacher', 'utp', 'inspector')
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.coursesService.findOne(id);
@@ -39,10 +39,7 @@ export class CoursesController {
 
   @Roles('admin')
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdateCourseDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateCourseDto) {
     return this.coursesService.update(id, data);
   }
 

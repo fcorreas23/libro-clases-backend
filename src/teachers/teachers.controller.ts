@@ -34,7 +34,7 @@ export class TeachersController {
     return this.teachersService.create(data);
   }
 
-  @Roles('admin')
+  @Roles('admin', 'utp')
   @Get()
   findAll(@Query() query: TeachersQueryDto) {
     return this.teachersService.findAll(query);

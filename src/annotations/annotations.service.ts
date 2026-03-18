@@ -4,10 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  AnnotationType,
-  Prisma,
-} from '@prisma/client';
+import { AnnotationType, Prisma } from '@prisma/client';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { AnnotationsQueryDto } from './dto/annotations-query.dto';
@@ -90,12 +87,18 @@ export class AnnotationsService {
     if (user.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (data.teacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only create annotations using their own teacherId');
+        throw new ForbiddenException(
+          'Teachers can only create annotations using their own teacherId',
+        );
       }
       await this.ensureTeacherCourseAccess(teacherId, data.courseId);
     }
 
-    await this.ensureStudentEnrollment(data.studentId, data.courseId, data.schoolYearId);
+    await this.ensureStudentEnrollment(
+      data.studentId,
+      data.courseId,
+      data.schoolYearId,
+    );
 
     return this.prisma.annotation.create({
       data: {
@@ -107,7 +110,9 @@ export class AnnotationsService {
 
   findAll(query: AnnotationsQueryDto, user: AuthenticatedUser) {
     const isTeacher = user.roles.includes('teacher');
-    const teacherId = isTeacher ? this.ensureTeacherContext(user) : query.teacherId;
+    const teacherId = isTeacher
+      ? this.ensureTeacherContext(user)
+      : query.teacherId;
     const viewerRole = isTeacher ? 'teacher' : query.viewerRole;
 
     this.ensureNegativeVisibility(query.includeNegative, viewerRole);
@@ -123,7 +128,9 @@ export class AnnotationsService {
         this.ensureNegativeVisibility(true, viewerRole);
       }
     } else {
-      typeFilter = query.includeNegative ? undefined : { not: AnnotationType.negative };
+      typeFilter = query.includeNegative
+        ? undefined
+        : { not: AnnotationType.negative };
     }
 
     const where: Prisma.AnnotationWhereInput = {
@@ -174,12 +181,17 @@ export class AnnotationsService {
     if (user.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (annotation.teacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only access their own annotations');
+        throw new ForbiddenException(
+          'Teachers can only access their own annotations',
+        );
       }
     }
 
     if (annotation.type === AnnotationType.negative) {
-      this.ensureNegativeVisibility(true, user.roles.includes('teacher') ? 'teacher' : viewerRole);
+      this.ensureNegativeVisibility(
+        true,
+        user.roles.includes('teacher') ? 'teacher' : viewerRole,
+      );
     }
 
     return annotation;

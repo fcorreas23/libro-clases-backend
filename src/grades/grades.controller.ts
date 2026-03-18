@@ -29,13 +29,19 @@ export class GradesController {
 
   @Roles('admin', 'teacher', 'utp')
   @Get()
-  findAll(@Query() query: GradesQueryDto, @CurrentUser() user: AuthenticatedUser) {
+  findAll(
+    @Query() query: GradesQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.gradesService.findAll(query, user);
   }
 
   @Roles('admin', 'teacher', 'utp')
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.gradesService.findOne(id, user);
   }
 
@@ -51,7 +57,10 @@ export class GradesController {
 
   @Roles('admin', 'teacher')
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.gradesService.remove(id, user);
   }
 }

@@ -23,13 +23,19 @@ export class AnnotationsController {
 
   @Roles('admin', 'teacher')
   @Post()
-  create(@Body() data: CreateAnnotationDto, @CurrentUser() user: AuthenticatedUser) {
+  create(
+    @Body() data: CreateAnnotationDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.annotationsService.create(data, user);
   }
 
   @Roles('admin', 'teacher', 'utp')
   @Get()
-  findAll(@Query() query: AnnotationsQueryDto, @CurrentUser() user: AuthenticatedUser) {
+  findAll(
+    @Query() query: AnnotationsQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.annotationsService.findAll(query, user);
   }
 
@@ -55,7 +61,10 @@ export class AnnotationsController {
 
   @Roles('admin', 'teacher')
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.annotationsService.remove(id, user);
   }
 }

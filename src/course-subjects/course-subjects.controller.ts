@@ -21,7 +21,7 @@ import { Roles } from '../auth/roles.decorator';
 export class CourseSubjectsController {
   constructor(private readonly courseSubjectsService: CourseSubjectsService) {}
 
-  @Roles('admin')
+  @Roles('utp')
   @Post()
   create(@Body() data: CreateCourseSubjectDto) {
     return this.courseSubjectsService.create(data);
@@ -29,17 +29,23 @@ export class CourseSubjectsController {
 
   @Roles('admin', 'teacher', 'utp')
   @Get()
-  findAll(@Query() query: CourseSubjectsQueryDto, @CurrentUser() user: AuthenticatedUser) {
+  findAll(
+    @Query() query: CourseSubjectsQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.courseSubjectsService.findAll(query, user);
   }
 
   @Roles('admin', 'teacher', 'utp')
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.courseSubjectsService.findOne(id, user);
   }
 
-  @Roles('admin')
+  @Roles('utp')
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -48,7 +54,7 @@ export class CourseSubjectsController {
     return this.courseSubjectsService.update(id, data);
   }
 
-  @Roles('admin')
+  @Roles('utp')
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.courseSubjectsService.remove(id);

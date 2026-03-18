@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { PrismaService } from '../prisma/prisma.service';
@@ -18,7 +22,10 @@ export class StudentsService {
     return user.teacherId;
   }
 
-  private async ensureTeacherCourseAccess(teacherId: number, courseId?: number) {
+  private async ensureTeacherCourseAccess(
+    teacherId: number,
+    courseId?: number,
+  ) {
     if (!courseId) {
       throw new ForbiddenException('Teachers must filter students by courseId');
     }
@@ -65,7 +72,10 @@ export class StudentsService {
 
   async findAll(query: StudentsQueryDto, user: AuthenticatedUser) {
     if (user.roles.includes('teacher')) {
-      await this.ensureTeacherCourseAccess(this.ensureTeacherContext(user), query.courseId);
+      await this.ensureTeacherCourseAccess(
+        this.ensureTeacherContext(user),
+        query.courseId,
+      );
     }
 
     const page = query.page ?? 1;
@@ -73,9 +83,7 @@ export class StudentsService {
     const skip = (page - 1) * limit;
     const where: Prisma.StudentWhereInput = {
       isActive:
-        query.isActive === undefined
-          ? undefined
-          : query.isActive === 'true',
+        query.isActive === undefined ? undefined : query.isActive === 'true',
       OR: query.q
         ? [
             { studentCode: { contains: query.q } },
@@ -138,7 +146,9 @@ export class StudentsService {
       );
 
       if (!allowedByHomeroom) {
-        const courseIds = student.enrollments.map((enrollment) => enrollment.course.id);
+        const courseIds = student.enrollments.map(
+          (enrollment) => enrollment.course.id,
+        );
         const assignment = await this.prisma.courseSubject.findFirst({
           where: {
             teacherId,

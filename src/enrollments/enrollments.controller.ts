@@ -9,13 +9,14 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CreateBulkEnrollmentDto } from './dto/create-bulk-enrollment.dto';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { EnrollmentsQueryDto } from './dto/enrollments-query.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
 import { EnrollmentsService } from './enrollments.service';
 import { Roles } from '../auth/roles.decorator';
 
-@Roles('admin')
+@Roles('inspector')
 @Controller('enrollments')
 export class EnrollmentsController {
   constructor(private readonly enrollmentsService: EnrollmentsService) {}
@@ -25,14 +26,19 @@ export class EnrollmentsController {
     return this.enrollmentsService.create(data);
   }
 
+  @Post('bulk')
+  createBulk(@Body() data: CreateBulkEnrollmentDto) {
+    return this.enrollmentsService.createBulk(data);
+  }
+
   @Get()
-  @Roles('admin', 'utp')
+  @Roles('inspector', 'utp')
   findAll(@Query() query: EnrollmentsQueryDto) {
     return this.enrollmentsService.findAll(query);
   }
 
   @Get(':id')
-  @Roles('admin', 'utp')
+  @Roles('inspector', 'utp')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.enrollmentsService.findOne(id);
   }

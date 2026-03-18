@@ -57,7 +57,10 @@ export class GradesService {
       throw new BadRequestException('CourseSubject does not exist');
     }
 
-    if (courseSubject.courseId !== courseId || courseSubject.subjectId !== subjectId) {
+    if (
+      courseSubject.courseId !== courseId ||
+      courseSubject.subjectId !== subjectId
+    ) {
       throw new BadRequestException(
         'courseId and subjectId must match the provided courseSubjectId',
       );
@@ -78,11 +81,17 @@ export class GradesService {
     if (user.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (data.teacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only create grades using their own teacherId');
+        throw new ForbiddenException(
+          'Teachers can only create grades using their own teacherId',
+        );
       }
     }
 
-    await this.ensureStudentEnrollment(data.studentId, data.courseId, data.schoolYearId);
+    await this.ensureStudentEnrollment(
+      data.studentId,
+      data.courseId,
+      data.schoolYearId,
+    );
     await this.ensureTeacherCourseSubject(
       data.courseSubjectId,
       data.courseId,
@@ -170,7 +179,9 @@ export class GradesService {
     if (user.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (grade.teacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only access their own grades');
+        throw new ForbiddenException(
+          'Teachers can only access their own grades',
+        );
       }
     }
 
@@ -188,7 +199,8 @@ export class GradesService {
       where: { id },
       data: {
         title: data.title,
-        value: data.value !== undefined ? new Prisma.Decimal(data.value) : undefined,
+        value:
+          data.value !== undefined ? new Prisma.Decimal(data.value) : undefined,
         observations: data.observations,
         recordedAt: data.recordedAt ? new Date(data.recordedAt) : undefined,
       },

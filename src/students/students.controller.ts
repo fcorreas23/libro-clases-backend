@@ -21,27 +21,33 @@ import { Roles } from '../auth/roles.decorator';
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
-  @Roles('admin')
+  @Roles('admin', 'inspector')
   @Post()
   create(@Body() data: CreateStudentDto) {
     return this.studentsService.create(data);
   }
 
-  @Roles('admin')
+  @Roles('admin', 'inspector')
   @Get('next-code')
   nextCode() {
     return this.studentsService.generateCode();
   }
 
-  @Roles('admin', 'teacher', 'utp')
+  @Roles('admin', 'teacher', 'utp', 'inspector')
   @Get()
-  findAll(@Query() query: StudentsQueryDto, @CurrentUser() user: AuthenticatedUser) {
+  findAll(
+    @Query() query: StudentsQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.studentsService.findAll(query, user);
   }
 
-  @Roles('admin', 'teacher', 'utp')
+  @Roles('admin', 'teacher', 'utp', 'inspector')
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthenticatedUser) {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.studentsService.findOne(id, user);
   }
 

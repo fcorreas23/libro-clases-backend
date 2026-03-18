@@ -27,9 +27,7 @@ export class SchoolYearsService {
     const where: Prisma.SchoolYearWhereInput = {
       name: query.name ? { contains: query.name } : undefined,
       isActive:
-        query.isActive === undefined
-          ? undefined
-          : query.isActive === 'true',
+        query.isActive === undefined ? undefined : query.isActive === 'true',
     };
 
     return this.prisma.schoolYear.findMany({

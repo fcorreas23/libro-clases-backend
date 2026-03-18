@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { PrismaService } from '../prisma/prisma.service';
@@ -76,7 +80,9 @@ export class CourseSubjectsService {
     if (user?.roles.includes('teacher')) {
       const teacherId = this.ensureTeacherContext(user);
       if (courseSubject.teacherId !== teacherId) {
-        throw new ForbiddenException('Teachers can only access their own course subjects');
+        throw new ForbiddenException(
+          'Teachers can only access their own course subjects',
+        );
       }
     }
 
@@ -95,9 +101,13 @@ export class CourseSubjectsService {
     await this.findOne(id);
 
     // Check for dependent grades that reference this course_subject.
-    const dependentGrades = await this.prisma.grade.count({ where: { courseSubjectId: id } });
+    const dependentGrades = await this.prisma.grade.count({
+      where: { courseSubjectId: id },
+    });
     if (dependentGrades > 0) {
-      throw new ForbiddenException(`No se puede eliminar la asignación: existen ${dependentGrades} calificaciones asociadas. Elimine o reasocie esas calificaciones antes de borrar la asignación.`);
+      throw new ForbiddenException(
+        `No se puede eliminar la asignación: existen ${dependentGrades} calificaciones asociadas. Elimine o reasocie esas calificaciones antes de borrar la asignación.`,
+      );
     }
 
     return this.prisma.courseSubject.delete({ where: { id } });
